@@ -1,6 +1,6 @@
 ---
 name: chat-subagent
-description: Use when the user provides a chat completion endpoint URL and wants to delegate work to it as a subagent. Triggers on phrases like "use this endpoint", "call this API as subagent", "delegate to this model".
+description: Use when the user provides a chat completion endpoint URL or a saved endpoint name and wants to delegate work to it as a subagent. Triggers on phrases like "use this endpoint", "call this API as subagent", "delegate to this model", "use ollama", or mentions a saved endpoint alias. Also triggers when user wants to save, list, or remove endpoint aliases.
 ---
 
 # Chat Subagent
@@ -10,17 +10,90 @@ Delegate tasks to an external OpenAI-compatible chat endpoint, review results, a
 ## When to Use
 
 - User provides a chat completion endpoint URL (e.g. `http://localhost:8080/v1/chat/completions`)
+- User refers to an endpoint by a saved alias (e.g. "use ollama to translate this")
 - User wants to offload part of the current task to an external model
 - User says "use this endpoint as a subagent"
+- User wants to save, list, or remove endpoint aliases (e.g. "remember this endpoint as ollama", "list my endpoints", "forget ollama")
+
+## Endpoint Aliases
+
+Users can save endpoint URLs under friendly names so they don't have to type full URLs every time.
+
+### Settings File
+
+Aliases are stored in `chat-subagent.local.md` with YAML frontmatter:
+
+```markdown
+---
+endpoints:
+  ollama:
+    url: http://localhost:11434/v1
+  lmstudio:
+    url: http://localhost:1234/v1
+    model: my-model
+  cloud:
+    url: https://api.example.com/v1
+    api_key_env: CLOUD_API_KEY
+---
+
+## Notes
+ollama runs locally, cloud needs API key set in env.
+```
+
+Each endpoint entry supports:
+- `url` (required) — the endpoint base URL
+- `model` (optional) — default model name for `-m` flag
+- `api_key_env` (optional) — environment variable name containing the API key (never store raw keys)
+
+### Resolution Order
+
+Check two locations, **project-level first, then global fallback**:
+
+1. `<project-root>/.claude/chat-subagent.local.md` — per-project overrides
+2. `~/.claude/chat-subagent.local.md` — global defaults
+
+If the same alias exists in both, the **project-level** definition wins. When listing endpoints, merge both (project entries override global ones with the same name).
+
+### Resolving an Endpoint
+
+When the user mentions an endpoint, follow this logic:
+
+1. If it looks like a URL (contains `://` or starts with `localhost`), use it directly
+2. Otherwise, treat it as an alias:
+   a. Read `<project-root>/.claude/chat-subagent.local.md` (if it exists)
+   b. Read `~/.claude/chat-subagent.local.md` (if it exists)
+   c. Look up the alias in project-level first, then global
+   d. If found, use the `url`, `model`, and `api_key_env` from the entry
+   e. If `api_key_env` is set, read the API key from that environment variable
+   f. If not found in either file, tell the user the alias is unknown and list available ones
+
+### Managing Aliases
+
+**Save:** When the user says "remember this endpoint as {name}" or "save {url} as {name}":
+1. Read the appropriate settings file (default: global `~/.claude/chat-subagent.local.md`)
+2. Add or update the entry under `endpoints`
+3. Preserve existing entries and markdown body
+4. If the file doesn't exist, create it with the new entry
+
+**List:** When the user says "list my endpoints" or "what endpoints do I have":
+1. Read both files, merge (project overrides global)
+2. Display a table: name, URL, model, scope (project/global)
+
+**Remove:** When the user says "forget {name}" or "remove {name} endpoint":
+1. Find which file contains the alias
+2. Remove that entry, preserve the rest
+
+**Note:** When saving to the global file, if `~/.claude/` directory doesn't exist, create it first.
 
 ## How It Works
 
-1. **User provides:** endpoint URL, optional API key, and the task context
-2. **You probe:** run a capability test to understand the subagent's strengths and limits
-3. **You decide:** how to break down and delegate work based on probe results
-4. **You call:** the endpoint via `chat.sh` helper script
-5. **You review:** the response for correctness and quality
-6. **You report:** findings back to the user
+1. **User provides:** endpoint URL or alias, optional API key, and the task context
+2. **You resolve:** the endpoint (alias lookup if needed, see above)
+3. **You probe:** run a capability test to understand the subagent's strengths and limits
+4. **You decide:** how to break down and delegate work based on probe results
+5. **You call:** the endpoint via `chat.sh` helper script
+6. **You review:** the response for correctness and quality
+7. **You report:** findings back to the user
 
 ## Capability Probe (Required First Call)
 
