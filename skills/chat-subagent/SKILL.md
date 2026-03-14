@@ -68,13 +68,13 @@ First, locate `chat.sh` relative to this SKILL.md (it is in the same directory).
 
 The script outputs raw JSON to stdout.
 
-**Permission setup:** Claude Code will prompt for each call because arguments differ. On first use, tell the user to add an allow rule to avoid repeated prompts:
+**Permission setup:** Claude Code will prompt for each call because arguments differ. On first use, tell the user to add an allow rule to avoid repeated prompts.
+
+Add the following to `~/.claude/settings.local.json` under `permissions.allow`:
 
 ```
-Bash(/path/to/chat.sh *)
+Bash(~/.claude/plugins/marketplaces/caasi-chat-subagent/skills/chat-subagent/chat.sh *)
 ```
-
-Replace `/path/to/` with the actual resolved path to `chat.sh`. Add it via Settings > Permissions > Allow, or in `~/.claude/settings.local.json` under `permissions.allow`.
 
 ## Delegation Pattern
 

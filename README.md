@@ -45,13 +45,13 @@ Claude will:
 
 ### Permission setup
 
-Claude Code prompts for each `chat.sh` call because arguments differ. Add this allow rule once to skip repeated prompts:
+Claude Code prompts for each `chat.sh` call because arguments differ. Add this allow rule once to skip repeated prompts.
+
+Add the following to `~/.claude/settings.local.json` under `permissions.allow`:
 
 ```
-Bash(/path/to/chat.sh *)
+Bash(~/.claude/plugins/marketplaces/caasi-chat-subagent/skills/chat-subagent/chat.sh *)
 ```
-
-Add via Settings > Permissions > Allow, or in `~/.claude/settings.local.json` under `permissions.allow`.
 
 ## Probe system
 
