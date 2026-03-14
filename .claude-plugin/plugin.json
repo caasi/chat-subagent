@@ -1,0 +1,13 @@
+{
+  "name": "chat-subagent",
+  "description": "Delegate tasks to external OpenAI-compatible chat endpoints with capability probing, delegation patterns, and prompt injection awareness",
+  "version": "0.1.0",
+  "author": {
+    "name": "caasi"
+  },
+  "homepage": "https://github.com/caasi/chat-subagent",
+  "repository": "https://github.com/caasi/chat-subagent",
+  "license": "MIT",
+  "keywords": ["subagent", "chat", "openai", "delegation", "local-llm", "ollama", "lm-studio"],
+  "skills": "./skills/"
+}

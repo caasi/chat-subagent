@@ -1,0 +1,3 @@
+TYPE: counting-spatial
+Q: How many "R"s are in the word "strawberry"?
+A: 3
