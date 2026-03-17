@@ -67,10 +67,17 @@ Then just say: *"Use homelab to analyze this code."*
 
 Models like DeepSeek, Qwen3, and OpenAI o-series produce reasoning tokens alongside their answers. The `-T` flag (or `thinking: true` in aliases) filters these out:
 
+**JSON fields** (removed from `choices[].message`):
 - `reasoning_content` (DeepSeek)
 - `reasoning`, `reasoning_details` (OpenRouter / OpenAI)
 - `thinking_blocks` (Anthropic via litellm)
-- `<think>...</think>` blocks in content (Qwen3)
+
+**XML blocks** (stripped from `content`):
+- `<think>...</think>` — Qwen3 official thinking format
+- `<thinking>...</thinking>` — observed in distilled models (e.g. Claude-Opus-Reasoning-Distilled)
+- `<analysis>...</analysis>` — observed in distilled models
+
+> **Note on distilled models:** Models fine-tuned on Claude reasoning traces (like `Qwen3.5-*-Claude-4.6-Opus-Reasoning-Distilled`) are trained to use `<think>` tags, but occasionally emit `<thinking>` or `<analysis>` blocks as well. These are not part of the official Qwen3 format — they leak from the distillation source. The filter handles all three.
 
 Requires `jq`. Only activates when `-T` is passed.
 
@@ -117,7 +124,7 @@ These are baked into the skill based on actual testing:
 - **Subagents hallucinate facts confidently.** Never delegate factual queries. Use them for reasoning and analysis over data you provide.
 - **"Be concise" is mandatory.** Without it, responses are 3-5x longer than needed.
 - **Probe results predict real performance.** A model weak on instruction-following in probes will fail format constraints in real tasks too.
-- **`<think>` blocks leak.** Some models include chain-of-thought in their output. Use `-T` flag or set `thinking: true` in endpoint aliases to filter them automatically.
+- **Thinking blocks leak in various formats.** Qwen3 uses `<think>`, but distilled models (especially those fine-tuned on Claude reasoning traces) may also emit `<thinking>` or `<analysis>` blocks. Use `-T` flag or set `thinking: true` in endpoint aliases to filter all variants automatically.
 - **WebFetch can't POST.** The skill uses a bash script with `curl` instead.
 
 ## License
