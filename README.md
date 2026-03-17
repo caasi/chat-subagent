@@ -4,7 +4,8 @@ A Claude Code skill that lets you delegate tasks to external OpenAI-compatible c
 
 ## What it does
 
-- Calls any OpenAI-compatible `/v1/chat/completions` endpoint via a lightweight bash script (`curl` only, zero dependencies)
+- Calls any OpenAI-compatible `/v1/chat/completions` endpoint via a lightweight bash script (`curl` only, `jq` optional)
+- Filters out thinking/reasoning output from responses (`-T` flag) — supports DeepSeek, OpenAI, OpenRouter, Anthropic (via litellm), and Qwen3 `<think>` blocks
 - Probes the remote model's abilities before trusting it with real work (reasoning, instruction-following, counting, coding)
 - Provides delegation patterns: what to offload vs. what to keep local
 - Includes prompt injection awareness (not a guarantee — just practical guardrails)
@@ -42,6 +43,36 @@ Claude will:
 2. **Report** what the model is good/bad at
 3. **Delegate** appropriate tasks based on probe results
 4. **Review** responses before acting on them
+
+### Endpoint aliases
+
+Save endpoints so you don't have to type full URLs every time. Create `~/.claude/chat-subagent.local.md` (global) or `<project>/.claude/chat-subagent.local.md` (per-project):
+
+```yaml
+---
+endpoints:
+  homelab:
+    url: http://localhost:1234/v1
+    model: my-model
+    thinking: true        # auto-filter thinking output
+  cloud:
+    url: https://api.example.com/v1
+    api_key_env: MY_API_KEY  # reads from env var
+---
+```
+
+Then just say: *"Use homelab to analyze this code."*
+
+### Thinking output filtering
+
+Models like DeepSeek, Qwen3, and OpenAI o-series produce reasoning tokens alongside their answers. The `-T` flag (or `thinking: true` in aliases) filters these out:
+
+- `reasoning_content` (DeepSeek)
+- `reasoning`, `reasoning_details` (OpenRouter / OpenAI)
+- `thinking_blocks` (Anthropic via litellm)
+- `<think>...</think>` blocks in content (Qwen3)
+
+Requires `jq`. Only activates when `-T` is passed.
 
 ### Permission setup
 
@@ -86,7 +117,7 @@ These are baked into the skill based on actual testing:
 - **Subagents hallucinate facts confidently.** Never delegate factual queries. Use them for reasoning and analysis over data you provide.
 - **"Be concise" is mandatory.** Without it, responses are 3-5x longer than needed.
 - **Probe results predict real performance.** A model weak on instruction-following in probes will fail format constraints in real tasks too.
-- **`<think>` blocks leak.** Some models include chain-of-thought in their output. The skill instructs Claude to filter these out.
+- **`<think>` blocks leak.** Some models include chain-of-thought in their output. Use `-T` flag or set `thinking: true` in endpoint aliases to filter them automatically.
 - **WebFetch can't POST.** The skill uses a bash script with `curl` instead.
 
 ## License
