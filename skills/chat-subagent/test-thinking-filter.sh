@@ -107,6 +107,21 @@ run_test "Both think and analysis blocks" \
   '{"choices":[{"message":{"role":"assistant","content":"<think>reasoning</think>\n<analysis>checking</analysis>\nfinal answer"}}]}' \
   '{"choices":[{"message":{"role":"assistant","content":"final answer"}}]}'
 
+# --- 15. <thinking> block stripped from content ---
+run_test "Thinking block (full tag) stripped from content" \
+  '{"choices":[{"message":{"role":"assistant","content":"<thinking>\nI need to explain the key differences.\nLet me organize this.\n</thinking>\n\nHere is the answer."}}]}' \
+  '{"choices":[{"message":{"role":"assistant","content":"Here is the answer."}}]}'
+
+# --- 16. <thinking> block inline ---
+run_test "Thinking block (full tag) inline" \
+  '{"choices":[{"message":{"role":"assistant","content":"<thinking>quick thought</thinking>result"}}]}' \
+  '{"choices":[{"message":{"role":"assistant","content":"result"}}]}'
+
+# --- 17. All three content block types ---
+run_test "Think, thinking, and analysis blocks combined" \
+  '{"choices":[{"message":{"role":"assistant","content":"<think>r1</think>\n<thinking>r2</thinking>\n<analysis>r3</analysis>\nfinal"}}]}' \
+  '{"choices":[{"message":{"role":"assistant","content":"final"}}]}'
+
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
 [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
