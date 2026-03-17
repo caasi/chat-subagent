@@ -34,6 +34,11 @@ endpoints:
   cloud:
     url: https://api.example.com/v1
     api_key_env: CLOUD_API_KEY
+  deepseek:
+    url: https://api.deepseek.com/v1
+    model: deepseek-reasoner
+    api_key_env: DEEPSEEK_API_KEY
+    thinking: true
 ---
 
 ## Notes
@@ -44,6 +49,7 @@ Each endpoint entry supports:
 - `url` (required) — the endpoint base URL
 - `model` (optional) — default model name for `-m` flag
 - `api_key_env` (optional) — environment variable name containing the API key (never store raw keys)
+- `thinking` (optional, boolean) — set to `true` if the model produces thinking/reasoning output; when true, automatically pass `-T` to `chat.sh` to filter it out
 
 ### Resolution Order
 
@@ -63,9 +69,10 @@ When the user mentions an endpoint, follow this logic:
    a. Read `<project-root>/.claude/chat-subagent.local.md` (if it exists)
    b. Read `~/.claude/chat-subagent.local.md` (if it exists)
    c. Look up the alias in project-level first, then global
-   d. If found, use the `url`, `model`, and `api_key_env` from the entry
+   d. If found, use the `url`, `model`, `api_key_env`, and `thinking` from the entry
    e. If `api_key_env` is set, read the API key from that environment variable
-   f. If not found in either file, tell the user the alias is unknown and list available ones
+   f. If `thinking` is `true`, pass `-T` flag to `chat.sh` to filter out reasoning output
+   g. If not found in either file, tell the user the alias is unknown and list available ones
 
 ### Managing Aliases
 
