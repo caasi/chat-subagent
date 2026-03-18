@@ -5,8 +5,8 @@
   "author": {
     "name": "caasi"
   },
-  "homepage": "https://github.com/caasi/chat-subagent",
-  "repository": "https://github.com/caasi/chat-subagent",
+  "homepage": "https://github.com/caasi/dong3",
+  "repository": "https://github.com/caasi/dong3",
   "license": "MIT",
   "keywords": ["subagent", "chat", "openai", "delegation", "local-llm", "ollama", "lm-studio"],
   "skills": "./skills/"
