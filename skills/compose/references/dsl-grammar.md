@@ -50,6 +50,20 @@ All operators are right-associative (matching Haskell Arrow fixity). Comments ca
 
 `***` is right-associative: `a *** b *** c` types as `(A, (B, C))`.
 
+`***` and `&&&` share the same precedence. When mixed without grouping, the rightmost operator binds first:
+
+```
+a *** b &&& c        -- parses as: a *** (b &&& c)
+a &&& b *** c        -- parses as: a &&& (b *** c)
+```
+
+Use explicit parentheses when mixing them to make intent clear:
+
+```
+(a *** b) &&& c      -- parallel a,b then fanout with c
+a *** (b &&& c)      -- fanout b,c then parallel with a
+```
+
 ## Node Design
 
 Nodes describe **purpose**, not specific tools. Each node may include:

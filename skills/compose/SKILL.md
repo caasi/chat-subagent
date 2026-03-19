@@ -158,6 +158,7 @@ The `examples/` directory contains ready-to-use `.arr` files demonstrating commo
 - **`examples/ci-pipeline.arr`** — Fanout lint+test → gate → parallel multi-platform build → upload
 - **`examples/test-fix-loop.arr`** — Iterative edit-test-evaluate feedback loop
 - **`examples/resilient-fetch.arr`** — Primary/mirror fallback with `|||`
+- **`examples/mixed-par-fanout.arr`** — Mixing `***` and `&&&`: precedence behavior and explicit grouping
 
 Use these as starting points: copy, modify node names/arguments, and validate with `ocaml-compose-dsl`.
 
