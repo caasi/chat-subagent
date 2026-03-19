@@ -124,17 +124,18 @@ read(source: "data.csv")
 
 ## Structural Rules
 
-The checker validates:
+The checker validates **syntax structure** only:
 
 - Balanced parentheses
-- `***` branches eventually merge
-- `|||` branches both produce output
-- `loop` contains an evaluation node (termination condition)
-- Every node has a purpose (name or comment)
+- Valid operator usage and precedence
+- Well-formed node definitions
 
 The checker does NOT validate:
 
 - Semantic compatibility between nodes
+- Whether `***` branches eventually merge (data flow analysis)
+- Whether `|||` branches both produce output
+- Whether `loop` contains a termination condition
 - Whether reference tools exist
 - Tool parameter formats
 - Anything requiring execution
