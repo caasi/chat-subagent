@@ -13,17 +13,30 @@ The `ocaml-compose-dsl` binary must be installed at `~/.local/bin/ocaml-compose-
 
 Ensure `~/.local/bin` is in `PATH`.
 
+### Version Check
+
+This skill requires **v0.2.0** or later. After confirming the binary exists, verify the version:
+
+```bash
+ocaml-compose-dsl --version
+```
+
+If the output is lower than `0.2.0` or the `--version` flag is not recognized, the binary is outdated. Offer to re-run `scripts/install.sh` to upgrade to the latest release.
+
 ## Core Concepts
 
 ### Arrow Combinators
 
 | Syntax | Meaning | Tool Call Expansion |
 |--------|---------|---------------------|
-| `>>>` | Sequential — run left then right | Sequential tool calls |
-| `***` | Parallel — run both concurrently | Multiple tool calls in one message |
-| `\|\|\|` | Branch — try left, fallback to right | Conditional fallback |
+| `>>>` | Sequential — run left then right (infixr 1) | Sequential tool calls |
+| `\|\|\|` | Branch — try left, fallback to right (infixr 2) | Conditional fallback |
+| `***` | Parallel — run both concurrently (infixr 3) | Multiple tool calls in one message |
+| `&&&` | Fanout — run both on same input (infixr 3) | Multiple tool calls, same input |
 | `loop()` | Feedback — repeat until evaluation passes | Retry / iterative refinement |
 | `()` | Grouping | Precedence control |
+
+All operators are **right-associative**. `***` and `&&&` bind tighter than `|||`, which binds tighter than `>>>`.
 
 ### Node Design
 
@@ -66,14 +79,15 @@ Or from a file:
 ocaml-compose-dsl pipeline.arr
 ```
 
-The binary exits `0` with `OK` on valid input, `1` with error messages on structural problems. Fix any structural errors before proceeding.
+The binary exits `0` with AST output (OCaml constructor format) on valid input, `1` with error messages on structural problems. Fix any structural errors before proceeding.
 
 ### 3. Expand and Execute
 
 After validation, expand each node into concrete tool calls based on available tools. The DSL is the plan; execution follows the plan's structure:
 
 - `>>>` nodes → execute sequentially
-- `***` nodes → execute as parallel tool calls in one message
+- `***` nodes → execute as parallel tool calls in one message (each side gets its own input)
+- `&&&` nodes → execute as parallel tool calls in one message (both sides get the same input)
 - `|||` nodes → try first branch, use second on failure
 - `loop()` → repeat the body until the evaluation node passes
 
@@ -122,7 +136,30 @@ read(source: file)
   >>> report(format: summary)
 ```
 
+### Fanout (Same Input, Multiple Checks)
+
+```
+(lint &&& test)
+  >>> gate(require: [pass, pass])
+  >>> (build_linux(profile: static) *** build_macos(profile: release))
+  >>> upload(tag: "v0.1.0")
+```
+
+`&&&` feeds the same input to both sides; `***` feeds separate inputs to each side.
+
 ## Additional Resources
+
+### Examples
+
+The `examples/` directory contains ready-to-use `.arr` files demonstrating common patterns:
+
+- **`examples/update-skill-from-upstream.arr`** — Meta-workflow: how this skill checks the upstream repo and updates itself. Demonstrates `&&&` fanout, `***` parallel, and multi-phase pipelines
+- **`examples/data-pipeline.arr`** — Read → parse → filter → parallel aggregation → format
+- **`examples/ci-pipeline.arr`** — Fanout lint+test → gate → parallel multi-platform build → upload
+- **`examples/test-fix-loop.arr`** — Iterative edit-test-evaluate feedback loop
+- **`examples/resilient-fetch.arr`** — Primary/mirror fallback with `|||`
+
+Use these as starting points: copy, modify node names/arguments, and validate with `ocaml-compose-dsl`.
 
 ### Reference Files
 

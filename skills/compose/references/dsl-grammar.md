@@ -3,18 +3,18 @@
 ## EBNF
 
 ```ebnf
-pipeline = expr ;
+pipeline = seq_expr ;
 
-expr     = term , { operator , term } ;
-
-operator = ">>>"                        (* sequential composition *)
-         | "***"                        (* parallel composition *)
-         | "|||"                        (* branch / fallback *)
-         ;
+seq_expr = alt_expr , ">>>" , seq_expr              (* sequential — infixr 1 *)
+         | alt_expr ;
+alt_expr = par_expr , "|||" , alt_expr              (* branch — infixr 2 *)
+         | par_expr ;
+par_expr = term , ( "***" | "&&&" ) , par_expr      (* parallel / fanout — infixr 3 *)
+         | term ;
 
 term     = node
-         | "loop" , "(" , expr , ")"    (* feedback loop *)
-         | "(" , expr , ")"            (* grouping *)
+         | "loop" , "(" , seq_expr , ")"            (* feedback loop *)
+         | "(" , seq_expr , ")"                    (* grouping *)
          ;
 
 node     = ident , [ "(" , [ args ] , ")" ] ;
@@ -35,17 +35,20 @@ string   = '"' , { any char - '"' } , '"' ;
 comment  = "--" , { any char - newline } ;
 ```
 
-Comments can appear after any term and are attached to the preceding node as purpose descriptions or reference tool annotations.
+All operators are right-associative (matching Haskell Arrow fixity). Comments can appear after any term and are attached to the preceding node as purpose descriptions or reference tool annotations.
 
 ## Combinators
 
-| Combinator | Syntax | Semantics | Expands To |
-|------------|--------|-----------|------------|
-| Sequential | `>>>` | Run left, then right | Sequential tool calls |
-| Parallel | `***` | Run both sides concurrently | Multiple tool calls in one message |
-| Branch | `\|\|\|` | Try left; if it fails, run right | Fallback logic |
-| Loop | `loop(expr)` | Repeat until evaluation passes | Retry / iterative refinement |
-| Group | `(expr)` | Precedence grouping | No direct expansion |
+| Combinator | Syntax | Precedence | Type | Expands To |
+|------------|--------|------------|------|------------|
+| Sequential | `>>>` | infixr 1 | `Arrow a b → Arrow b c → Arrow a c` | Sequential tool calls |
+| Branch | `\|\|\|` | infixr 2 | `Arrow a c → Arrow b c → Arrow (Either a b) c` | Fallback logic |
+| Parallel | `***` | infixr 3 | `Arrow a b → Arrow c d → Arrow (a,c) (b,d)` | Multiple tool calls in one message |
+| Fanout | `&&&` | infixr 3 | `Arrow a b → Arrow a c → Arrow a (b,c)` | Multiple tool calls, same input |
+| Loop | `loop(expr)` | — | `Arrow (a,s) (b,s) → Arrow a b` | Retry / iterative refinement |
+| Group | `(expr)` | — | Precedence grouping | No direct expansion |
+
+`***` is right-associative: `a *** b *** c` types as `(A, (B, C))`.
 
 ## Node Design
 
@@ -76,6 +79,17 @@ read(source: "data.csv")
   >>> (count *** collect(fields: [email]))  -- parallel: count & collect
   >>> format(as: report)
 ```
+
+### Fanout
+
+```
+(lint &&& test)
+  >>> gate(require: [pass, pass])
+  >>> (build_linux(profile: static) *** build_macos(profile: release))
+  >>> upload(tag: "v0.1.0")
+```
+
+`&&&` feeds the same input to both sides. `***` feeds separate inputs to each side.
 
 ### Branch / Fallback
 

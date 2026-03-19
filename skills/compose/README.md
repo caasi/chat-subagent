@@ -11,14 +11,15 @@ A Claude Code skill for describing multi-step agent workflows using an Arrow-sty
 
 ## Arrow Combinators
 
-| Syntax | Meaning |
-|--------|---------|
-| `>>>` | Sequential — run left then right |
-| `***` | Parallel — run both concurrently |
-| `\|\|\|` | Branch — try left, fallback to right |
-| `loop()` | Feedback — repeat until evaluation passes |
+| Syntax | Meaning | Precedence |
+|--------|---------|------------|
+| `>>>` | Sequential — run left then right | infixr 1 |
+| `\|\|\|` | Branch — try left, fallback to right | infixr 2 |
+| `***` | Parallel — run both concurrently | infixr 3 |
+| `&&&` | Fanout — run both on same input | infixr 3 |
+| `loop()` | Feedback — repeat until evaluation passes | — |
 
-## Example
+## Examples
 
 ```
 read(source: "data.csv")
@@ -27,6 +28,15 @@ read(source: "data.csv")
   >>> (count *** collect(fields: [email]))
   >>> format(as: report)
 ```
+
+```
+(lint &&& test)
+  >>> gate(require: [pass, pass])
+  >>> (build_linux(profile: static) *** build_macos(profile: release))
+  >>> upload(tag: "v0.1.0")
+```
+
+More examples in `examples/` — including a meta-workflow that describes how this skill updates itself from the upstream repo.
 
 ## Install
 
