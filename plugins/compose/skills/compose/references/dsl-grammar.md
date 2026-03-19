@@ -145,7 +145,7 @@ mix(volumes: [100ml, 250ml, 50ml])
   >>> heat(temp: 72.5c, duration: 30min)
 ```
 
-Note: leading-dot (`.5`) and trailing-dot (`5.`) forms are **not** valid — use `0.5` and `5` respectively.
+Note: leading-dot (`.5`) and trailing-dot (`5.`) forms are **not** valid — use `0.5` and `5.0` respectively.
 
 ### Cross-Agent Portability
 
