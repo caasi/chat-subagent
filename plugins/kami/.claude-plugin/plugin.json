@@ -1,7 +1,9 @@
 {
   "name": "kami",
   "description": "Socratic dialogue for reflecting on human-AI stewardship",
-  "author": { "name": "caasi" },
+  "author": {
+    "name": "caasi"
+  },
   "homepage": "https://github.com/caasi/dong3",
   "repository": "https://github.com/caasi/dong3",
   "license": "MIT",

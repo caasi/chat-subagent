@@ -6,55 +6,90 @@
 
 ---
 
-## Core Concept
+## English Version (civic.ai)
 
-Research project by Audrey Tang and Caroline Green at the Institute for Ethics in AI, University of Oxford.
+### 6-Pack of Care
 
-> "Governance should feel like a daily capability, not just a periodic vote."
+**Governance should feel like a daily capability, not just a periodic vote.**
 
-Rather than solving AI alignment through top-down approaches, this framework emphasizes public maintenance of values and accountability.
+Most AI alignment work attempts to solve values hierarchically through better rules, inferred preferences, and improved models. The 6-Pack approaches this differently by asking who receives attention, who bears accountability, how harm gets repaired, and when systems should cease operating. Alignment requires ongoing public maintenance rather than one-time solutions.
 
-## The Kami Model
+The deployment unit is the **Kami**—a localized steward serving bounded communities rather than functioning as a universal authority. Kamis support neighborhoods, schools, unions, faith organizations, cities, and diaspora communities in practicing genuine collective governance: bridging differences through listening, conducting transparent deliberation, maintaining institutional memory, and coordinating action.
 
-The unit of deployment is the **Kami** — a bounded local steward rather than a universal governor. Kamis serve neighborhoods, schools, unions, faith groups, and cities, enabling communities to listen across differences, deliberate openly, maintain collective memory, and act together without central ownership or platform extraction.
+Communities maintain governance over Kamis without central model ownership or platform extraction. The innovation centers on strengthening self-governance through transparent institutions that publicly address harm and preserve civic continuity across generations.
 
-## The Six Packs
+### The Six Packs
 
-1. **Attentiveness** (覺察力) — Recognizing what people closest to problems observe that institutions miss
-2. **Responsibility** (負責力) — Establishing clear accountability and authority with consequences for failure
-3. **Competence** (勝任力) — Ensuring systems work in practice through auditable, explainable, and safely-failing mechanisms
-4. **Responsiveness** (回應力) — Enabling affected people to contest outcomes and demand repair
-5. **Solidarity** (團結力) — Rewarding cooperation and public accountability over lock-in
-6. **Symbiosis** (共生力) — Maintaining bounded, local, sunset-ready systems rather than permanent structures
+These design principles translate care ethics into inspectable institutional structures:
 
-Packs 1–4 form a feedback loop; Pack 5 scales across organizations; Pack 6 provides boundary conditions.
+- **Pack 1: Attentiveness** — insights from people closest to problems that institutions overlook
+- **Pack 2: Responsibility** — accountability structures, authority distribution, and failure consequences
+- **Pack 3: Competence** — practical functionality with auditable, explicable, and safely-failing systems
+- **Pack 4: Responsiveness** — mechanisms enabling affected populations to challenge outcomes and demand remediation
+- **Pack 5: Solidarity** — ecosystem incentives favoring cooperation and public accountability over dependence
+- **Pack 6: Symbiosis** — conditions maintaining bounded, localized, reversible systems rather than permanent hardened structures
+- **Measures** — one primary public metric per pack alongside supporting diagnostics
 
----
+### Getting Started
 
-## 中文摘要：仁工智慧·關懷六力
+**Policy resources:** Manifesto, FAQ, and essay on bottom-up alignment approaches
 
-核心主張：「治理應該是日常能力，不只是定期投票。」
+**Engineering resources:** Pack 3 materials, measurement frameworks, and technical deep-dives
 
-傳統 AI 對齊工作多採自上而下方式，但本框架主張應通過公共程序持續維護對齊，而非一次性解決。
+**Civic practice resources:** Pack 1 content, Pack 4 responsiveness models, and podcast series
 
-### 地神（Kami）模型
+### Four Proof Points
 
-部署的基本單位為「地神」——有界的在地守護者。這些系統由社群治理、檢查與質疑，無任何中央模型擁有它們，也無平台從中獲利。
+The framework draws evidence from public policy (Taiwan's Alignment Assembly addressing AI-enabled fraud), technical architecture (bounded system governance advantages), civic participation (digital citizenship initiatives and democracy-focused podcasts), and long-term care sector collaboration demonstrating cross-sector co-production of responsibility standards.
 
-### 六項設計原則
+### Leadership
 
-1. **覺察力** — 制度未見、但接近痛點的人已發現的問題
-2. **負責力** — 權責歸屬與失敗後果
-3. **勝任力** — 系統可稽核、可解釋與安全試錯
-4. **回應力** — 受影響者的異議與修復機制
-5. **團結力** — 生態獎勵合作與公開問責
-6. **共生力** — 保持在地、有界、可退場特性
+Audrey Tang and Caroline Green developed this framework through the Accelerator Fellowship Programme at Oxford's Institute for Ethics in AI, with presentation scheduled for March 2026.
 
 ---
 
-## Key Publications
+## 中文版 (civic.ai/tw)
 
-- "Sunset Section 230 and Unleash the First Amendment" (Communications of the ACM, 2026)
-- "How Malicious AI Swarms Can Threaten Democracy" (Science, 2026)
-- "Conversation Networks" (McGill Centre, March 2025)
-- "Community by Design" (arXiv, February 2025)
+### 仁工智慧 · 關懷六力
+
+**治理應該是日常能力，不只是定期投票。**
+
+Most AI alignment efforts attempt top-down solutions through better rules, preferences, and models. However, the "Six-Pack of Care" approach begins differently by asking who is heard, who is accountable, how failures are repaired, and when systems should exit. Alignment requires continuous maintenance through public processes rather than one-time solutions.
+
+The fundamental deployment unit is the **Kami** (地神)—bounded local stewards rather than all-powerful rulers. These entities help communities, schools, unions, faith groups, cities, and diaspora communities achieve the long-promised but difficult-to-scale aspects of collective self-governance: listening across differences, public deliberation, faithful memory, and collective action.
+
+"No central model owns them. No platform extracts from them. Communities govern, inspect, question, and close them."
+
+The breakthrough lies not in smarter chatbots but in "more robust autonomy: institutions operating transparently, repairing harms publicly, and transmitting civic memory across generations."
+
+### Getting Started
+
+**Policy path:** Read the manifesto, FAQ, and "AI Alignment Cannot Be Top-Down"
+
+**Engineering path:** Read sections on competence, metrics, and "Inside the Kami"
+
+**Civic practice path:** Read awareness, responsiveness sections, and related podcast content
+
+### Six Design Principles
+
+1. **Awareness** — What those closest to problems see that institutions miss
+2. **Accountability** — Who is responsible, what authority they hold, consequences of failure
+3. **Competence** — System auditability, explainability, and safe experimentation capability
+4. **Responsiveness** — Can affected people object, demand repair, drive system change
+5. **Solidarity** — Does the ecosystem reward cooperation, exit, and accountability over platform lock-in
+6. **Symbiosis** — Does the system remain local, bounded, and reversible rather than becoming permanent governance
+
+### Four Case Studies
+
+- Public policy case on AI-driven fraud ads in Taiwan
+- Technical case arguing bounded specialized systems are more governable than general intelligences
+- Civic practice cases examining participation, legitimacy, and everyday problem-solving
+- Long-term care case exploring collaborative responsibility-centered AI definitions
+
+### Academic Publications
+
+Recent peer-reviewed work includes papers in Communications of the ACM, Science, and arXiv addressing platform accountability reform, democratic threats from AI swarms, civic communication infrastructure, and community-centered platform redesign.
+
+### Project Leadership
+
+The research collaboration between Audrey Tang and Caroline Green operates through a manifesto, operational pack pages, and a forthcoming 2026 book. The framework will be presented at the Civic AI Conference on March 25, 2026, in Oxford.
