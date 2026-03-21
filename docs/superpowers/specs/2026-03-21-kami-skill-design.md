@@ -140,11 +140,12 @@ plugins/kami/
 ---
 name: kami
 description: >-
-  Use when the user wants to reflect on their relationship with AI agents,
-  review a design through an ethical lens, examine an existing agent or skill,
-  asks "what kind of steward am I", mentions "/kami", or wants a Socratic
-  dialogue about human-AI collaboration. Also triggered when other skills
-  recommend reflection.
+  Use when the user asks to "review my agent", "check if this design is
+  responsible", "who does this affect", "is this agent ethical", "think about
+  the impact", "reflect on this skill", "examine this agent's boundaries",
+  mentions "/kami", "kami", "civic AI", "humane intelligence", "仁工智慧",
+  or wants a Socratic dialogue about human-AI collaboration and stewardship.
+  Also triggered when other skills recommend reflection.
 ---
 ```
 
