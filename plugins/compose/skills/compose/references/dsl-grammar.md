@@ -29,16 +29,26 @@ value    = string
          | "[" , [ value , { "," , value } ] , "]"
          ;
 
-ident    = ( letter | "_" ) , { letter | digit | "-" | "_" } ;
+ident       = ident_start , { ident_char } ;
+ident_start = ? any valid UTF-8 codepoint that is not an ASCII digit,
+                not ASCII whitespace, and not one of ( ) [ ] : , > * | & - " .
+                ! # $ % ^ + = { } < ; ' ` ~ / ? @ \ ? ;
+ident_char  = ? any valid UTF-8 codepoint that is not ASCII whitespace,
+                and not one of ( ) [ ] : , > * | & " .
+                ! # $ % ^ + = { } < ; ' ` ~ / ? @ \ ? ;
 
-string   = '"' , { any char - '"' } , '"' ;
+string   = '"' , { ? any valid UTF-8 codepoint except '"' ? } , '"' ;
 
-number   = [ "-" ] , digit , { digit } , [ "." , digit , { digit } ] , { letter } ;
+digit    = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 
-comment  = "--" , { any char - newline } ;
+number   = [ "-" ] , digit , { digit } , [ "." , digit , { digit } ] , [ ident_start , { ident_char } ] ;
+
+comment  = "--" , { ? any valid UTF-8 codepoint except newline ? } ;
 ```
 
 All operators are right-associative (matching Haskell Arrow fixity). Comments can appear after any term and are attached to the preceding node as purpose descriptions or reference tool annotations.
+
+Identifiers and unit suffixes support full UTF-8 codepoints, including non-ASCII characters (CJK, Greek, accented Latin, etc.), so the DSL works naturally with non-Latin scripts. Error positions report codepoint-level columns, not byte offsets.
 
 ## Combinators
 
@@ -146,6 +156,26 @@ mix(volumes: [100ml, 250ml, 50ml])
 ```
 
 Note: leading-dot (`.5`) and trailing-dot (`5.`) forms are **not** valid — use `0.5` and `5.0` respectively.
+
+### Unicode Identifiers
+
+Node names, argument keys, and unit suffixes can use non-Latin scripts:
+
+```
+読み込み(ソース: "データ.csv")
+  >>> フィルタ(条件: "年齢 > 18")
+  >>> 出力
+```
+
+```
+加熱(溫度: 72.5℃, 時間: 30分鐘)
+  >>> 冷卻(目標: 4℃)
+```
+
+```
+dose(amount: 500ミリ秒)            -- unicode unit suffix
+  >>> measure(area: 100m2)         -- digit within unit suffix
+```
 
 ### Cross-Agent Portability
 
