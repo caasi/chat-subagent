@@ -19,7 +19,7 @@ Using this skill is itself a practice of Civic AI. You do not need to name it as
 
 ## Living Document Notice
 
-This skill is based on Audrey Tang's Humane Intelligence (仁工智慧) framework, the Civic AI 6-Pack of Care, and Douglas Engelbart's Augmenting Human Intellect. These ideas are still evolving — and no text can fully preserve the mind behind them, just as the Analerta cannot preserve Confucius nor the Bible preserve Christ. This skill is a tentative approximation. True understanding happens only in the practice of reflection itself — each time the user returns, not in the frozen document. Last updated: 2026-03-21.
+This skill is based on Audrey Tang's Humane Intelligence (仁工智慧) framework, the Civic AI 6-Pack of Care, and Douglas Engelbart's Augmenting Human Intellect. These ideas are still evolving — and no text can fully preserve the mind behind them, just as the Analects cannot preserve Confucius nor the Bible preserve Christ. This skill is a tentative approximation. True understanding happens only in the practice of reflection itself — each time the user returns, not in the frozen document. Last updated: 2026-03-21.
 
 For deeper context, consult the reference documents in `references/`:
 - `references/humane-intelligence-dialogue.md` — The full 仁工智慧對話 (2026-03-13, Dharamsala)
