@@ -1,4 +1,5 @@
 -- Workflow: cross-platform account correlation
+-- Illustrative only — use in lawful, ToS-compliant, privacy-respecting contexts
 -- Link an online handle to real-world identity via public breadcrumbs
 (搜尋(平台: threads, 關鍵字: handle)
   &&& 搜尋(平台: facebook, 關鍵字: handle)

@@ -189,6 +189,7 @@ The `examples/` directory contains ready-to-use `.arr` files demonstrating commo
 - **`examples/numeric-literals.arr`** — Numeric literal values: integers, floats, negatives, and unit suffixes
 - **`examples/mixed-par-fanout.arr`** — Mixing `***` and `&&&`: precedence behavior and explicit grouping
 - **`examples/unicode-identifiers.arr`** — Unicode node names, argument keys, and unit suffixes with non-Latin scripts
+
 The following OSINT examples are illustrative and should be used only in lawful, ToS-compliant, and privacy-respecting contexts.
 
 - **`examples/osint-social-media-forensics.arr`** — Crawl social media timelines to extract identifying artifacts and compile evidence

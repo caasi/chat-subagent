@@ -1,4 +1,5 @@
 -- Workflow: open-source military media monitoring
+-- Illustrative only — use in lawful, ToS-compliant, privacy-respecting contexts
 -- Monitor state media broadcasts, extract unit designations, and map to known bases
 監控(頻道: [cctv7, 央視軍事], 關鍵字: [新兵入營, 訓練])  -- ref: WebFetch, Bash("yt-dlp")
   >>> 擷取資訊(欄位: [部隊番號, 人名, 地名])

@@ -1,4 +1,5 @@
 -- Workflow: systematic evidence compilation for legal proceedings
+-- Illustrative only — use in lawful, ToS-compliant, privacy-respecting contexts
 -- Organize scattered online evidence into court-ready folders
 loop(
   掃描(來源: 轉發清單, 批次: 50)                 -- ref: WebFetch, Bash("curl")

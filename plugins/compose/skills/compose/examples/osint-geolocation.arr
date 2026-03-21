@@ -1,4 +1,5 @@
 -- Workflow: geolocation from broadcast footage
+-- Illustrative only — use in lawful, ToS-compliant, privacy-respecting contexts
 -- Identify a facility's coordinates by cross-referencing video frames with satellite imagery
 擷取影格(來源: "官媒報導.mp4", 間隔: 5s)        -- ref: Bash("ffmpeg")
   >>> 辨識地標(方法: [建築輪廓, 地形, 植被])     -- ref: Agent(vision)

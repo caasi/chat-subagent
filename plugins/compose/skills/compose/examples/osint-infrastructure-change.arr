@@ -1,4 +1,5 @@
 -- Workflow: military infrastructure change detection
+-- Illustrative only — use in lawful, ToS-compliant, privacy-respecting contexts
 -- Compare temporal satellite imagery to identify new construction at known facilities
 取得座標(來源: facility_database, 篩選: "近期活動")  -- ref: Read
   >>> (下載衛星圖(日期: "2024-01") *** 下載衛星圖(日期: "2026-03"))  -- ref: WebFetch

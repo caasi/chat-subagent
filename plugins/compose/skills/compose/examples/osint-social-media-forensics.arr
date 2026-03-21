@@ -1,4 +1,5 @@
 -- Workflow: social media timeline forensics
+-- Illustrative only — use in lawful, ToS-compliant, privacy-respecting contexts
 -- Crawl a target's post history to extract identifying artifacts
 收集(平台: social_media, 範圍: "全部貼文")   -- ref: Bash("gallery-dl"), WebFetch
   >>> 篩選(類型: [圖片, 個資線索])
