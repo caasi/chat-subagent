@@ -5,7 +5,7 @@ A Claude Code skill for describing multi-step agent workflows using an Arrow-sty
 ## What it does
 
 - Teaches AI agents to plan workflows as Arrow-style pipelines before executing them
-- Validates pipeline structure with a pre-built binary checker (parse errors, unbalanced branches, missing evaluation nodes)
+- Validates pipeline structure with a pre-built binary checker (parse errors, unbalanced branches) and emits warnings (`?` without `|||`)
 - Saves successful pipelines as `.arr` files for reuse across conversations
 - Provides common patterns: sequential, parallel, branch/fallback, and feedback loops
 
@@ -17,7 +17,8 @@ A Claude Code skill for describing multi-step agent workflows using an Arrow-sty
 | `\|\|\|` | Branch — try left, fallback to right | infixr 2 |
 | `***` | Parallel — run both concurrently | infixr 3 |
 | `&&&` | Fanout — run both on same input | infixr 3 |
-| `loop()` | Feedback — repeat until evaluation passes | — |
+| `loop()` | Feedback — repeat body iteratively | — |
+| `?` | Question — marks step as producing Either | — |
 
 ## Examples
 
