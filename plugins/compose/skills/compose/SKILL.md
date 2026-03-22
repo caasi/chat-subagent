@@ -191,7 +191,7 @@ Error positions report codepoint-level columns, not byte offsets, so diagnostics
 
 The `examples/` directory contains ready-to-use `.arr` files demonstrating common patterns:
 
-- **`examples/update-skill-from-upstream.arr`** — Meta-workflow: how this skill checks the upstream repo and updates itself. Demonstrates `&&&` fanout, `***` parallel, and multi-phase pipelines
+- **`examples/update-skill-from-upstream.arr`** — Meta-workflow: how this skill checks the upstream repo and aligns docs, examples, and metadata. Demonstrates `&&&` fanout, `***` parallel, and multi-phase pipelines
 - **`examples/data-pipeline.arr`** — Read → parse → filter → parallel aggregation → format
 - **`examples/ci-pipeline.arr`** — Fanout lint+test → gate → parallel multi-platform build → upload
 - **`examples/test-fix-loop.arr`** — Iterative edit-test feedback loop using `?` + `|||` for exit condition
