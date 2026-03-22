@@ -2,5 +2,6 @@
 loop(
   edit(target: code, change: fix)     -- ref: Edit
     >>> test(suite: relevant)         -- ref: Bash("npm test")
-    >>> evaluate(criteria: all_pass)  -- exit loop when all tests green
+    >>> "all tests pass"?
+    >>> (done ||| retry)              -- exit loop on pass, retry on fail
 )
