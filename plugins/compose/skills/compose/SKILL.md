@@ -199,6 +199,7 @@ The `examples/` directory contains ready-to-use `.arr` files demonstrating commo
 - **`examples/numeric-literals.arr`** — Numeric literal values: integers, floats, negatives, and unit suffixes
 - **`examples/mixed-par-fanout.arr`** — Mixing `***` and `&&&`: precedence behavior and explicit grouping
 - **`examples/unicode-identifiers.arr`** — Unicode node names, argument keys, and unit suffixes with non-Latin scripts
+- **`examples/question-operator.arr`** — Question operator `?`: marking steps as producing Either for `|||` branching
 
 The following OSINT examples are illustrative and should be used only in lawful, ToS-compliant, and privacy-respecting contexts. Person-targeting examples model defensive workflows (tracing dox attackers) and include de-identification, public methodology disclosure, and legal reporting steps.
 
