@@ -194,7 +194,7 @@ The `examples/` directory contains ready-to-use `.arr` files demonstrating commo
 - **`examples/update-skill-from-upstream.arr`** — Meta-workflow: how this skill checks the upstream repo and updates itself. Demonstrates `&&&` fanout, `***` parallel, and multi-phase pipelines
 - **`examples/data-pipeline.arr`** — Read → parse → filter → parallel aggregation → format
 - **`examples/ci-pipeline.arr`** — Fanout lint+test → gate → parallel multi-platform build → upload
-- **`examples/test-fix-loop.arr`** — Iterative edit-test-evaluate feedback loop
+- **`examples/test-fix-loop.arr`** — Iterative edit-test feedback loop using `?` + `|||` for exit condition
 - **`examples/resilient-fetch.arr`** — Primary/mirror fallback with `|||`
 - **`examples/numeric-literals.arr`** — Numeric literal values: integers, floats, negatives, and unit suffixes
 - **`examples/mixed-par-fanout.arr`** — Mixing `***` and `&&&`: precedence behavior and explicit grouping

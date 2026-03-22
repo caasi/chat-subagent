@@ -139,7 +139,8 @@ read(source: "data.csv")
 loop(
   generate(artifact: code, from: spec)  -- produce code from spec
     >>> verify(method: test_suite)       -- run tests
-    >>> evaluate(criteria: all_pass)     -- check pass/fail
+    >>> "all tests pass"?               -- check pass/fail
+    >>> (done ||| fix_and_retry)         -- branch on result
 )
 ```
 
