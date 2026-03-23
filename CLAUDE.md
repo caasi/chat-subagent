@@ -22,7 +22,7 @@ docs/superpowers/                 # Design specs and implementation plans
 Each plugin follows this layout:
 ```
 plugins/<name>/
-  .claude-plugin/plugin.json      # Plugin metadata & version
+  .claude-plugin/plugin.json      # Plugin metadata
   skills/<skill-name>/
     SKILL.md                      # System prompt (Claude reads this)
     README.md                     # User-facing documentation
@@ -33,7 +33,7 @@ plugins/<name>/
 
 **chat-subagent (v0.3.2):** `chat.sh` is a pure bash/curl wrapper for OpenAI-compatible APIs. `thinking-filter.jq` strips reasoning blocks. `probes/` contains 19 diagnostic questions (reasoning, instruction-following, counting, coding). Test the jq filter with `test-thinking-filter.sh`.
 
-**compose (v0.6.1):** Uses an OCaml binary (`ocaml-compose-dsl`) for DSL validation. Install via `scripts/install.sh` (downloads to `~/.local/bin/`). Validate `.arr` files with `ocaml-compose-dsl pipeline.arr`. Arrow combinators: `>>>` (sequential), `|||` (branch), `***` (parallel), `&&&` (fanout), `loop()` (feedback). Grammar spec in `references/dsl-grammar.md`, 15 examples in `examples/`.
+**compose (v0.6.1):** Uses an OCaml binary (`ocaml-compose-dsl`) for DSL validation. Install via `scripts/install.sh` (downloads to `~/.local/bin/`). Validate `.arr` files with `ocaml-compose-dsl pipeline.arr`. Arrow combinators: `>>>` (sequential), `|||` (branch), `***` (parallel), `&&&` (fanout), `?` (question/branch), `loop()` (feedback). Grammar spec in `references/dsl-grammar.md`, 16 examples in `examples/`.
 
 **kami (v0.1.0):** Pure dialogue, no runtime dependencies. Grounded in Audrey Tang's 仁工智慧 framework and the Civic AI 6-Pack of Care.
 
