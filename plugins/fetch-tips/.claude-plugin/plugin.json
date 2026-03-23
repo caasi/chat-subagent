@@ -1,0 +1,12 @@
+{
+  "name": "fetch-tips",
+  "description": "Platform-specific fetch strategies for content that resists simple WebFetch",
+  "author": {
+    "name": "caasi"
+  },
+  "homepage": "https://github.com/caasi/dong3",
+  "repository": "https://github.com/caasi/dong3",
+  "license": "MIT",
+  "keywords": ["fetch", "tips", "blogspot", "blogger", "web-scraping"],
+  "skills": "./skills/"
+}
