@@ -9,8 +9,12 @@ seq_expr = alt_expr , ">>>" , seq_expr              (* sequential — infixr 1 *
          | alt_expr ;
 alt_expr = par_expr , "|||" , alt_expr              (* branch — infixr 2 *)
          | par_expr ;
-par_expr = term , ( "***" | "&&&" ) , par_expr      (* parallel / fanout — infixr 3 *)
-         | term ;
+par_expr = typed_term , ( "***" | "&&&" ) , par_expr      (* parallel / fanout — infixr 3 *)
+         | typed_term ;
+
+typed_term = term , [ "::" , type_expr ] ;             (* optional type annotation *)
+
+type_expr  = ident , "->" , ident ;
 
 question_term = string , "?"                       (* question — produces Either *)
               | node , "?"
@@ -55,6 +59,8 @@ All operators are right-associative (matching Haskell Arrow fixity). Comments ca
 
 Identifiers and unit suffixes support full UTF-8 codepoints, including non-ASCII characters (CJK, Greek, accented Latin, etc.), so the DSL works naturally with non-Latin scripts. Error positions report codepoint-level columns, not byte offsets.
 
+`typed_term` sits at the `par_expr` level, but since `seq_expr` and `alt_expr` both bottom out through `par_expr → typed_term → term`, every term position in the grammar can carry a `:: Ident -> Ident` annotation. Annotations are documentation-only; the checker does not validate types.
+
 ## Combinators
 
 | Combinator | Syntax | Precedence | Type | Expands To |
@@ -66,6 +72,7 @@ Identifiers and unit suffixes support full UTF-8 codepoints, including non-ASCII
 | Loop | `loop(expr)` | — | `Arrow (a,s) (b,s) → Arrow a b` | Retry / iterative refinement |
 | Question | `node?` / `"string"?` | — | `Arrow a (Either a a)` | Marks step as producing Either for `\|\|\|` |
 | Group | `(expr)` | — | Precedence grouping | No direct expansion |
+| Type Ann | `term :: A -> B` | — | Documentation annotation | No direct expansion |
 
 `***` is right-associative: `a *** b *** c` types as `(A, (B, C))`.
 
@@ -165,6 +172,28 @@ Only the "try" side (left operand of `|||`, or the upstream step producing Eithe
 
 The checker emits a warning (to stderr, exit code unaffected) if `?` appears without a matching `|||` in scope.
 
+### Type Annotations
+
+Nodes and terms can carry optional type annotations using `::`:
+
+```
+fetch(url: "https://example.com") :: URL -> HTML
+  >>> parse :: HTML -> Data
+  >>> format(as: report) :: Data -> Report
+```
+
+Annotations document intended data flow for humans and agents. The checker parses them into the AST but performs **no type checking** — they are purely documentation.
+
+Type annotations bind at the `par_expr` level (tighter than all infix operators):
+
+```
+-- annotation attaches to the preceding term, not the whole chain
+read :: File -> CSV >>> parse :: CSV -> Data
+
+-- annotate grouped expressions
+(read >>> parse) :: File -> Data
+```
+
 ### Numeric Literals
 
 Numbers can be integers, floats, negative, or carry unit suffixes:
@@ -240,3 +269,4 @@ The checker does NOT validate:
 The checker also emits **warnings** (to stderr, without affecting exit code):
 
 - `?` without matching `|||` in scope — the Either has no consumer
+- `?` as operand of `|||` — `?` already implies `|||` with an implicit empty branch; using both is redundant
