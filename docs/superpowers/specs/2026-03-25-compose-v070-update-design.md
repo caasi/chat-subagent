@@ -35,11 +35,13 @@ par_expr = typed_term , ( "***" | "&&&" ) , par_expr
          | typed_term ;
 ```
 
+Note: `typed_term` sits at the `par_expr` level, but since `seq_expr` and `alt_expr` both bottom out through `par_expr → typed_term → term`, every term position in the grammar can carry an annotation. This is consistent with upstream.
+
 Add a new section explaining:
 - `::` introduces an optional type annotation on any term
 - `type_expr` is `Ident -> Ident` (input type → output type)
 - Annotations are documentation-only; the checker does not validate types
-- Annotations bind tighter than all infix operators (they attach to the preceding term)
+- Annotations bind at the `par_expr` level — they attach to the preceding term before `***`/`&&&`/`|||`/`>>>` are considered
 
 Add a Type Annotations entry to the Combinator table and a dedicated examples subsection.
 
@@ -93,20 +95,41 @@ A focused example demonstrating type annotations across all combinator forms:
 
 ### 5. `frontend-project.arr` Updates
 
-#### 5a. Restructure Handoff Section (lines 126–140)
+#### 5a. Restructure Handoff Section (lines 121–149 of `frontend-project.arr`)
 
-**Before (triggers v0.7.0 warning):**
+Replace the Phase 3 Handoff block from `-- Phase 3: Handoff` (line 120) through the `Handoff會議QA紀錄` line (line 150). The critical change is in the AI-generation-vs-manual-handoff fallback (original lines 126–140):
+
+**Before (triggers v0.7.0 warning — `?` as `|||` operand):**
 ```
-Figma_MCP(任務: 讀取元件規格)
-  >>> (Cursor(任務: 生成元件程式碼) &&& Claude(任務: 程式碼品質檢查))
-  >>> Cursor(任務: 修正生成結果)?
-|||
-(Zeplin(任務: 標註匯出) >>> (...))
+>>> Figma(任務: Dev_Mode啟用)
+>>> (
+  Figma(任務: 元件文件撰寫, 含: Props與Variants) &&& Figma(任務: Design_Token匯出, 格式: JSON)
+)
+>>> (
+  Figma_MCP(任務: 讀取元件規格)
+    >>> (
+      Cursor(任務: 生成元件程式碼) &&& Claude(任務: 程式碼品質檢查)
+    )
+    >>> Cursor(任務: 修正生成結果)? -- known false positive: ? matches ||| below
+  |||
+  (
+    Zeplin(任務: 標註匯出)
+    >>> (
+      Notion(文件: 元件規格)
+      &&& Notion(文件: 互動行為描述)
+      &&& Notion(文件: 邊界情況清單)
+    )
+  )
+)
 ```
 
 **After (clean, no warning):**
 ```
-Figma_MCP(任務: 讀取元件規格)
+>>> Figma(任務: Dev_Mode啟用)
+>>> (
+  Figma(任務: 元件文件撰寫, 含: Props與Variants) &&& Figma(任務: Design_Token匯出, 格式: JSON)
+)
+>>> Figma_MCP(任務: 讀取元件規格)
 >>> AI生成品質評估?
 >>> (
   (Cursor(任務: 生成元件程式碼) &&& Claude(任務: 程式碼品質檢查))
@@ -117,7 +140,7 @@ Figma_MCP(任務: 讀取元件規格)
 )
 ```
 
-The decision point (`AI生成品質評估?`) is now an explicit node producing Either, consumed by the `|||` below. No redundant `?` on a `|||` operand.
+The decision point (`AI生成品質評估?`) is now an explicit node producing Either, consumed by the `|||` below. The `-- known false positive` comment is removed because the pattern is no longer present.
 
 #### 5b. Add Type Annotations Throughout
 
