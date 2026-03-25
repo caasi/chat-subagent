@@ -15,7 +15,7 @@ Ensure `~/.local/bin` is in `PATH`.
 
 ### Version Check
 
-This skill requires **v0.6.1** or later. After confirming the binary exists, verify the version:
+This skill requires **v0.7.0** or later. After confirming the binary exists, verify the version:
 
 ```bash
 ocaml-compose-dsl --version
