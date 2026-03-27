@@ -20,12 +20,22 @@ curl --silent --fail-with-body "${URL}/api/v1/chat" \
   --header "Content-Type: application/json" \
   ${API_KEY:+--header "Authorization: Bearer ${API_KEY}"} \
   --max-time "${TIMEOUT:-120}" \
-  --data '{
-    "model": "${MODEL}",
-    "input": "${PROMPT}",
-    "integrations": ${INTEGRATIONS},
-    "temperature": 0
-  }'
+  --data "${JSON_BODY}"
+```
+
+Build `${JSON_BODY}` as a JSON object with these fields:
+- `"model"`, `"input"`, `"temperature"` — always included
+- `"integrations"` — **only** include when configured (omit entirely otherwise)
+- `"context_length"` — **only** include when configured
+
+**Minimal example (no integrations):**
+```json
+{"model": "${MODEL}", "input": "${PROMPT}", "temperature": 0}
+```
+
+**With integrations:**
+```json
+{"model": "${MODEL}", "input": "${PROMPT}", "temperature": 0, "integrations": ["mcp/web-search"]}
 ```
 
 **Field sources:**
@@ -33,7 +43,6 @@ curl --silent --fail-with-body "${URL}/api/v1/chat" \
 - `${MODEL}` — endpoint config `model` field
 - `${API_KEY}` — read from env var named in `api_key_env` config field; omit header if not set
 - `${PROMPT}` — the delegated task prompt (single string, not messages array)
-- `${INTEGRATIONS}` — JSON array from endpoint config `integrations` field (e.g. `["mcp/web-search", "mcp/fetch"]`); omit field entirely if not configured
 - `${TIMEOUT}` — use 120 seconds unless the task warrants more
 
 **Optional fields:**
