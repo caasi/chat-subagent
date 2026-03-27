@@ -271,6 +271,7 @@ If the task is complex, make multiple sequential calls. Each call should build o
 - **Using WebFetch** — it only fetches web pages, cannot POST to APIs. Always use `curl` via Bash
 - Sending requests without enough context (the external model can't see your conversation)
 - Trusting responses without review (always verify)
+- **Exposing API keys** — never log curl commands containing `Authorization` headers, avoid `curl --verbose` when auth headers are present, and never embed raw keys in the `--data` body. Use the `${API_KEY:+...}` conditional pattern from the reference docs
 - **Asking subagent for facts** — it has no tools and will confidently fabricate URLs, dates, names. Use it for reasoning, not retrieval
 - **Forgetting "Be concise"** — without it, subagents produce 3-5x more text than needed
 - **Delegating format-critical tasks to a weak instruction-follower** — if probe showed it can't count letters or follow constraints, don't ask it to produce structured output. Get the content and reformat yourself
