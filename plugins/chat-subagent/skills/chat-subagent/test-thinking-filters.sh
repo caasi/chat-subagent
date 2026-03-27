@@ -117,12 +117,63 @@ echo ""
 
 if [[ ! -f "$LMSTUDIO_FILTER" ]]; then
   echo "Error: thinking-filter-lmstudio.jq not found at $LMSTUDIO_FILTER" >&2
-  echo ""
-  echo "=== Results: $PASS passed, $FAIL failed, LM Studio tests skipped ==="
-  [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
+  exit 1
 fi
 
-# LM Studio tests will be added in Task 2
+# --- L1. Reasoning items filtered out ---
+run_test "$LMSTUDIO_FILTER" "Reasoning items removed" \
+  '{"output":[{"type":"reasoning","content":"thinking..."},{"type":"message","content":"The answer."}],"stats":{}}' \
+  '{"output":[{"type":"message","content":"The answer."}],"stats":{}}'
+
+# --- L2. Multiple reasoning items interleaved ---
+run_test "$LMSTUDIO_FILTER" "Multiple reasoning items interleaved" \
+  '{"output":[{"type":"reasoning","content":"r1"},{"type":"message","content":"First."},{"type":"reasoning","content":"r2"},{"type":"message","content":"Second."}],"stats":{}}' \
+  '{"output":[{"type":"message","content":"First."},{"type":"message","content":"Second."}],"stats":{}}'
+
+# --- L3. Tool call items preserved ---
+run_test "$LMSTUDIO_FILTER" "Tool call items preserved" \
+  '{"output":[{"type":"reasoning","content":"thinking"},{"type":"tool_call","tool":"web-search","arguments":{"query":"test"},"output":"results"},{"type":"message","content":"Done."}],"stats":{}}' \
+  '{"output":[{"type":"tool_call","tool":"web-search","arguments":{"query":"test"},"output":"results"},{"type":"message","content":"Done."}],"stats":{}}'
+
+# --- L4. Think tags stripped from message content ---
+run_test "$LMSTUDIO_FILTER" "Think tags stripped from message content" \
+  '{"output":[{"type":"message","content":"<think>\nLet me reason.\n</think>\nThe answer is 42."}],"stats":{}}' \
+  '{"output":[{"type":"message","content":"The answer is 42."}],"stats":{}}'
+
+# --- L5. Thinking tags stripped from message content ---
+run_test "$LMSTUDIO_FILTER" "Thinking tags stripped from message content" \
+  '{"output":[{"type":"message","content":"<thinking>reasoning</thinking>result"}],"stats":{}}' \
+  '{"output":[{"type":"message","content":"result"}],"stats":{}}'
+
+# --- L6. Analysis tags stripped from message content ---
+run_test "$LMSTUDIO_FILTER" "Analysis tags stripped from message content" \
+  '{"output":[{"type":"message","content":"<analysis>\nChecking.\n</analysis>\n\nFinal answer."}],"stats":{}}' \
+  '{"output":[{"type":"message","content":"Final answer."}],"stats":{}}'
+
+# --- L7. All tag types combined in message ---
+run_test "$LMSTUDIO_FILTER" "All tag types combined in message" \
+  '{"output":[{"type":"message","content":"<think>t1</think>\n<thinking>t2</thinking>\n<analysis>t3</analysis>\nfinal"}],"stats":{}}' \
+  '{"output":[{"type":"message","content":"final"}],"stats":{}}'
+
+# --- L8. No reasoning (passthrough) ---
+run_test "$LMSTUDIO_FILTER" "No reasoning items unchanged" \
+  '{"output":[{"type":"message","content":"Just a normal response."}],"stats":{"input_tokens":10}}' \
+  '{"output":[{"type":"message","content":"Just a normal response."}],"stats":{"input_tokens":10}}'
+
+# --- L9. Empty output array ---
+run_test "$LMSTUDIO_FILTER" "Empty output array" \
+  '{"output":[],"stats":{}}' \
+  '{"output":[],"stats":{}}'
+
+# --- L10. Only reasoning items (all filtered) ---
+run_test "$LMSTUDIO_FILTER" "Only reasoning items results in empty output" \
+  '{"output":[{"type":"reasoning","content":"r1"},{"type":"reasoning","content":"r2"}],"stats":{}}' \
+  '{"output":[],"stats":{}}'
+
+# --- L11. Tool call content not stripped (tags only in message type) ---
+run_test "$LMSTUDIO_FILTER" "Tool call output not tag-stripped" \
+  '{"output":[{"type":"tool_call","tool":"fetch","output":"<think>not stripped</think>data"}],"stats":{}}' \
+  '{"output":[{"type":"tool_call","tool":"fetch","output":"<think>not stripped</think>data"}],"stats":{}}'
 
 echo ""
 echo "=== Results: $PASS passed, $FAIL failed ==="
