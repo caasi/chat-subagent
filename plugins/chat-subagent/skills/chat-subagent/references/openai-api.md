@@ -17,7 +17,7 @@ Inform the user and strip the suffix before appending the path.
 ```bash
 curl --silent --fail-with-body "${URL}/v1/chat/completions" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer ${API_KEY}" \
+  ${API_KEY:+--header "Authorization: Bearer ${API_KEY}"} \
   --max-time "${TIMEOUT:-120}" \
   --data '{
     "model": "${MODEL}",
