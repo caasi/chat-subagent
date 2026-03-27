@@ -1,11 +1,12 @@
 # chat-subagent
 
-A Claude Code skill that lets you delegate tasks to external OpenAI-compatible chat endpoints. Probe capabilities first, then delegate with awareness of what can go wrong.
+A Claude Code skill that lets you delegate tasks to external chat endpoints (OpenAI-compatible and LM Studio native API). Probe capabilities first, then delegate with awareness of what can go wrong.
 
 ## What it does
 
-- Calls any OpenAI-compatible `/v1/chat/completions` endpoint via a lightweight bash script (`curl` only, `jq` optional)
-- Filters out thinking/reasoning output from responses (`-T` flag) — supports DeepSeek, OpenAI, OpenRouter, Anthropic (via litellm), and Qwen3 `<think>` blocks
+- Calls OpenAI-compatible (`/v1/chat/completions`) or LM Studio native (`/api/v1/chat`) endpoints via `curl` directly — no wrapper scripts needed
+- LM Studio native API supports server-side MCP tool calling (web search, fetch)
+- Filters out thinking/reasoning output from responses via `jq` — supports DeepSeek, OpenAI, OpenRouter, Anthropic (via litellm), Qwen3 `<think>` blocks, and LM Studio native reasoning items
 - Probes the remote model's abilities before trusting it with real work (reasoning, instruction-following, counting, coding)
 - Provides delegation patterns: what to offload vs. what to keep local
 - Includes prompt injection awareness (not a guarantee — just practical guardrails)
@@ -49,20 +50,30 @@ Save endpoints so you don't have to type full URLs every time. Create `~/.claude
 ---
 endpoints:
   homelab:
-    url: http://localhost:1234/v1
+    url: http://localhost:1234
     model: my-model
-    thinking: true        # auto-filter thinking output
+    thinking: true              # auto-filter thinking output
+  homelab-native:
+    url: http://localhost:1234
+    model: my-model
+    type: lmstudio              # use LM Studio native API
+    thinking: true
+    integrations:               # MCP servers to enable
+      - mcp/web-search
+      - mcp/fetch
   cloud:
-    url: https://api.example.com/v1
-    api_key_env: MY_API_KEY  # reads from env var
+    url: https://api.example.com
+    api_key_env: MY_API_KEY     # reads from env var
 ---
 ```
+
+**Note:** The `url` field is the base URL **without** `/v1` prefix. The skill appends the correct path automatically based on `type`.
 
 Then just say: *"Use homelab to analyze this code."*
 
 ### Thinking output filtering
 
-Models like DeepSeek, Qwen3, and OpenAI o-series produce reasoning tokens alongside their answers. The `-T` flag (or `thinking: true` in aliases) filters these out:
+Models like DeepSeek, Qwen3, and OpenAI o-series produce reasoning tokens alongside their answers. Setting `thinking: true` in endpoint aliases filters these out via `jq`:
 
 **JSON fields** (removed from `choices[].message`):
 - `reasoning_content` (DeepSeek)
@@ -76,26 +87,29 @@ Models like DeepSeek, Qwen3, and OpenAI o-series produce reasoning tokens alongs
 
 > **Note on distilled models:** Models fine-tuned on Claude reasoning traces (like `Qwen3.5-*-Claude-4.6-Opus-Reasoning-Distilled`) are trained to use `<think>` tags, but occasionally emit `<thinking>` or `<analysis>` blocks as well. These are not part of the official Qwen3 format — they leak from the distillation source. The filter handles all three.
 
-Requires `jq`. Only activates when `-T` is passed.
+Requires `jq`. For LM Studio native API responses, the filter also removes `type: reasoning` items from the `output[]` array.
+
+Only activates when `thinking: true` is set in the endpoint config.
 
 ### Permission setup
 
-Claude Code will prompt for permission on the first `chat.sh` call and probe file reads. Allow it once, and Claude will update the project-level `.claude/settings.local.json` to cover all future calls automatically.
+Claude Code will prompt for permission on the first `curl` call and probe file reads. Allow it once, and Claude will update the project-level `.claude/settings.local.json` to cover all future calls automatically.
 
-You can also set it up manually. Replace `<HOME>` with your home directory and `<VERSION>` with the installed version (e.g. `0.1.1`). Permissions target the **cache** folder, which is where Claude Code resolves scripts from at runtime:
+You can also set it up manually:
 
 ```json
 {
   "permissions": {
     "allow": [
-      "Bash(<HOME>/.claude/plugins/cache/caasi-dong3/chat-subagent/<VERSION>/skills/chat-subagent/chat.sh *)",
+      "Bash(curl *)",
+      "Bash(jq *)",
       "Read(//<HOME>/.claude/plugins/cache/caasi-dong3/chat-subagent/<VERSION>/skills/chat-subagent/probes/**)"
     ]
   }
 }
 ```
 
-**Note:** After updating the plugin, the cache path changes with the new version number. You will need to allow permissions again or update the version in your rules.
+Replace `<HOME>` with your home directory and `<VERSION>` with the installed version (e.g. `0.4.0`).
 
 ## Probe system
 
@@ -121,8 +135,8 @@ These are baked into the skill based on actual testing:
 - **Subagents hallucinate facts confidently.** Never delegate factual queries. Use them for reasoning and analysis over data you provide.
 - **"Be concise" is mandatory.** Without it, responses are 3-5x longer than needed.
 - **Probe results predict real performance.** A model weak on instruction-following in probes will fail format constraints in real tasks too.
-- **Thinking blocks leak in various formats.** Qwen3 uses `<think>`, but distilled models (especially those fine-tuned on Claude reasoning traces) may also emit `<thinking>` or `<analysis>` blocks. Use `-T` flag or set `thinking: true` in endpoint aliases to filter all variants automatically.
-- **WebFetch can't POST.** The skill uses a bash script with `curl` instead.
+- **Thinking blocks leak in various formats.** Qwen3 uses `<think>`, but distilled models (especially those fine-tuned on Claude reasoning traces) may also emit `<thinking>` or `<analysis>` blocks. Set `thinking: true` in endpoint aliases to filter all variants automatically.
+- **WebFetch can't POST.** The skill uses `curl` via Bash instead.
 
 ## License
 
