@@ -116,7 +116,6 @@ Tests should verify:
 - Reasoning items are filtered from `output[]`
 - `<think>`, `<thinking>`, `<analysis>` tags are stripped from message content
 - Non-reasoning items (message, tool_call) are preserved intact
-```
 
 ### SKILL.md Changes
 
