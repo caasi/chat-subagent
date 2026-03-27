@@ -58,12 +58,12 @@ to the input string (e.g. `"System: You are a code reviewer.\n\nUser: Review thi
 
 **Without thinking filter:**
 ```bash
-curl ... | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'
+curl ... | jq --raw-output 'if (.output | type) == "array" then [.output[] | select(.type == "message") | .content] | join("\n") else . end'
 ```
 
 **With thinking filter** (when `thinking: true` in config):
 ```bash
-curl ... | jq --from-file /path/to/thinking-filter-lmstudio.jq | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'
+curl ... | jq --from-file /path/to/thinking-filter-lmstudio.jq | jq --raw-output 'if (.output | type) == "array" then [.output[] | select(.type == "message") | .content] | join("\n") else . end'
 ```
 
 The `thinking-filter-lmstudio.jq` file is in the same directory as the SKILL.md file.
