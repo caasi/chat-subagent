@@ -81,7 +81,7 @@ And strips these tags from `.content`:
 ## Error Handling
 
 If `curl` exits non-zero or the response contains an `error` field:
-1. Check HTTP status (non-2xx means server error)
+1. Check HTTP status: non-2xx means the request failed (4xx = client/request error, 5xx = server error)
 2. Parse `.error.message` from JSON response if available
 3. Report the error to the user — do not retry automatically
 
