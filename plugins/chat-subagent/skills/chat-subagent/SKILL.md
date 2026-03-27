@@ -158,7 +158,7 @@ curl --silent --fail-with-body "http://localhost:1234/v1/chat/completions" \
   --header "Content-Type: application/json" \
   --max-time 120 \
   --data '{"model":"my-model","messages":[{"role":"system","content":"You are helpful."},{"role":"user","content":"Hello"}]}' \
-  | jq -f /path/to/thinking-filter.jq \
+  | jq --from-file /path/to/thinking-filter.jq \
   | jq --raw-output '.choices[0].message.content'
 ```
 
@@ -168,7 +168,7 @@ curl --silent --fail-with-body "http://localhost:1234/api/v1/chat" \
   --header "Content-Type: application/json" \
   --max-time 120 \
   --data '{"model":"my-model","input":"Hello","integrations":["mcp/web-search"]}' \
-  | jq -f /path/to/thinking-filter-lmstudio.jq \
+  | jq --from-file /path/to/thinking-filter-lmstudio.jq \
   | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'
 ```
 

@@ -47,7 +47,7 @@ curl ... | jq --raw-output '.choices[0].message.content'
 
 **With thinking filter** (when `thinking: true` in config):
 ```bash
-curl ... | jq -f /path/to/thinking-filter.jq | jq --raw-output '.choices[0].message.content'
+curl ... | jq --from-file /path/to/thinking-filter.jq | jq --raw-output '.choices[0].message.content'
 ```
 
 The `thinking-filter.jq` file is in the same directory as the SKILL.md file.

@@ -63,7 +63,7 @@ curl ... | jq --raw-output '[.output[] | select(.type == "message") | .content] 
 
 **With thinking filter** (when `thinking: true` in config):
 ```bash
-curl ... | jq -f /path/to/thinking-filter-lmstudio.jq | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'
+curl ... | jq --from-file /path/to/thinking-filter-lmstudio.jq | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'
 ```
 
 The `thinking-filter-lmstudio.jq` file is in the same directory as the SKILL.md file.
