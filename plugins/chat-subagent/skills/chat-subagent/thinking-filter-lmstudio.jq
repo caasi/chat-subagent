@@ -8,11 +8,15 @@
 #   - Removes all items with type "reasoning"
 #   - Strips <think>, <thinking>, <analysis> tags from message content
 #   - Preserves tool_call and message items intact (except tag stripping)
-.output |= map(
-  select(.type != "reasoning")
-  | if .type == "message" and .content then
-      .content |= gsub("<think>(.|\n)*?</think>\n*"; "")
-      | .content |= gsub("<thinking>(.|\n)*?</thinking>\n*"; "")
-      | .content |= gsub("<analysis>(.|\n)*?</analysis>\n*"; "")
-    else . end
-)
+if (.output | type) == "array" then
+  .output |= map(
+    select(.type != "reasoning")
+    | if .type == "message" and .content then
+        .content |= gsub("<think>(.|\n)*?</think>\n*"; "")
+        | .content |= gsub("<thinking>(.|\n)*?</thinking>\n*"; "")
+        | .content |= gsub("<analysis>(.|\n)*?</analysis>\n*"; "")
+      else . end
+  )
+else
+  .
+end

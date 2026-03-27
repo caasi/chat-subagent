@@ -170,7 +170,12 @@ run_test "$LMSTUDIO_FILTER" "Only reasoning items results in empty output" \
   '{"output":[{"type":"reasoning","content":"r1"},{"type":"reasoning","content":"r2"}],"stats":{}}' \
   '{"output":[],"stats":{}}'
 
-# --- L11. Tool call content not stripped (tags only in message type) ---
+# --- L11. Error response passthrough ---
+run_test "$LMSTUDIO_FILTER" "Error response passthrough" \
+  '{"error":{"message":"Model not found","code":404}}' \
+  '{"error":{"message":"Model not found","code":404}}'
+
+# --- L12. Tool call content not stripped (tags only in message type) ---
 run_test "$LMSTUDIO_FILTER" "Tool call output not tag-stripped" \
   '{"output":[{"type":"tool_call","tool":"fetch","output":"<think>not stripped</think>data"}],"stats":{}}' \
   '{"output":[{"type":"tool_call","tool":"fetch","output":"<think>not stripped</think>data"}],"stats":{}}'
