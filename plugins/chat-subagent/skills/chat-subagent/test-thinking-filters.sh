@@ -14,10 +14,10 @@ LMSTUDIO_FILTER="$SCRIPT_DIR/thinking-filter-lmstudio.jq"
 run_test() {
   local filter="$1" name="$2" input="$3" expected="$4"
   local actual
-  actual=$(printf '%s' "$input" | jq -f "$filter")
+  actual=$(printf '%s' "$input" | jq --from-file "$filter")
   local norm_expected norm_actual
-  norm_expected=$(printf '%s' "$expected" | jq -c .)
-  norm_actual=$(printf '%s' "$actual" | jq -c .)
+  norm_expected=$(printf '%s' "$expected" | jq --compact-output .)
+  norm_actual=$(printf '%s' "$actual" | jq --compact-output .)
   if [[ "$norm_actual" == "$norm_expected" ]]; then
     echo "  PASS: $name"
     PASS=$((PASS + 1))
