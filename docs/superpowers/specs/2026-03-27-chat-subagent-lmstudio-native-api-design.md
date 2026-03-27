@@ -158,7 +158,7 @@ On first use, proactively update the project-level `.claude/settings.local.json`
 
 Resolve the absolute path from this SKILL.md's cache location.
 
-**TBD: pipe command permission pattern.** The actual usage is `curl ... | jq -f ...`.
+**TBD: pipe command permission pattern.** The actual usage is `curl ... | jq --from-file ...`.
 Claude Code matches against the full Bash command string. The exact pattern
 (e.g. `Bash(curl * | jq *)` or separate rules) must be tested during
 implementation before the permission setup instructions are finalized.
@@ -197,7 +197,7 @@ Covers:
 - Authentication via `Authorization: Bearer` header
 - Response structure: `.choices[0].message.content`
 - Thinking filter: pipe through `thinking-filter.jq` (same directory as SKILL.md)
-- Example jq extraction: `jq -f /path/to/thinking-filter.jq | jq --raw-output '.choices[0].message.content'`
+- Example jq extraction: `jq --from-file /path/to/thinking-filter.jq | jq --raw-output '.choices[0].message.content'`
 
 ### references/lmstudio-api.md
 
@@ -209,7 +209,7 @@ Covers:
 - Authentication (same Bearer token scheme)
 - Response structure: `.output[]` typed array
 - Thinking filter: pipe through `thinking-filter-lmstudio.jq`
-- Example jq extraction: `jq -f /path/to/thinking-filter-lmstudio.jq | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'`
+- Example jq extraction: `jq --from-file /path/to/thinking-filter-lmstudio.jq | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'`
 - MCP tool call items in response (for logging/review, not execution)
 
 ### thinking-filter-lmstudio.jq

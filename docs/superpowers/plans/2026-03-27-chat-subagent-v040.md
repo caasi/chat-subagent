@@ -63,10 +63,10 @@ LMSTUDIO_FILTER="$SCRIPT_DIR/thinking-filter-lmstudio.jq"
 run_test() {
   local filter="$1" name="$2" input="$3" expected="$4"
   local actual
-  actual=$(printf '%s' "$input" | jq -f "$filter")
+  actual=$(printf '%s' "$input" | jq --from-file "$filter")
   local norm_expected norm_actual
-  norm_expected=$(printf '%s' "$expected" | jq -c .)
-  norm_actual=$(printf '%s' "$actual" | jq -c .)
+  norm_expected=$(printf '%s' "$expected" | jq --compact-output .)
+  norm_actual=$(printf '%s' "$actual" | jq --compact-output .)
   if [[ "$norm_actual" == "$norm_expected" ]]; then
     echo "  PASS: $name"
     PASS=$((PASS + 1))
@@ -365,7 +365,7 @@ curl ... | jq --raw-output '.choices[0].message.content'
 
 **With thinking filter** (when `thinking: true` in config):
 ```bash
-curl ... | jq -f /path/to/thinking-filter.jq | jq --raw-output '.choices[0].message.content'
+curl ... | jq --from-file /path/to/thinking-filter.jq | jq --raw-output '.choices[0].message.content'
 ```
 
 The `thinking-filter.jq` file is in the same directory as the SKILL.md file.
@@ -466,7 +466,7 @@ curl ... | jq --raw-output '[.output[] | select(.type == "message") | .content] 
 
 **With thinking filter** (when `thinking: true` in config):
 ```bash
-curl ... | jq -f /path/to/thinking-filter-lmstudio.jq | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'
+curl ... | jq --from-file /path/to/thinking-filter-lmstudio.jq | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'
 ```
 
 The `thinking-filter-lmstudio.jq` file is in the same directory as the SKILL.md file.
@@ -659,7 +659,7 @@ curl --silent --fail-with-body "http://localhost:1234/v1/chat/completions" \
   --header "Content-Type: application/json" \
   --max-time 120 \
   --data '{"model":"my-model","messages":[{"role":"system","content":"You are helpful."},{"role":"user","content":"Hello"}]}' \
-  | jq -f /path/to/thinking-filter.jq \
+  | jq --from-file /path/to/thinking-filter.jq \
   | jq --raw-output '.choices[0].message.content'
 ```
 
@@ -669,7 +669,7 @@ curl --silent --fail-with-body "http://localhost:1234/api/v1/chat" \
   --header "Content-Type: application/json" \
   --max-time 120 \
   --data '{"model":"my-model","input":"Hello","integrations":["mcp/web-search"]}' \
-  | jq -f /path/to/thinking-filter-lmstudio.jq \
+  | jq --from-file /path/to/thinking-filter-lmstudio.jq \
   | jq --raw-output '[.output[] | select(.type == "message") | .content] | join("\n")'
 ```
 
