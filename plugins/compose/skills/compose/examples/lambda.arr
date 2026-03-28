@@ -8,7 +8,7 @@ greet(world)
 ; let review = \trigger, fix -> loop(trigger >>> (pass ||| fix)) in
   review(check?, rework)
 
--- Lambda as positional argument passed to a node
+-- Let-bound pipeline as positional argument passed to a node
 ; let v = some_pipeline in
   push(remote: origin, v)
 
