@@ -283,19 +283,19 @@ read(source: "data.csv")
 
 Lambda creates parameterized workflow fragments:
 
-```
+```arrow
 \name -> hello(to: name) >>> respond
 ```
 
 Multi-parameter lambda:
 
-```
+```arrow
 \trigger, fix -> loop(trigger >>> (pass ||| fix))
 ```
 
 Lambda with type annotations:
 
-```
+```arrow
 \url -> fetch(url: url) :: URL -> HTML
   >>> parse :: HTML -> Data
 ```

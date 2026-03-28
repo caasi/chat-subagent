@@ -75,14 +75,14 @@ Lambda and let bindings are tools for organizing complex workflows — naming re
 
 **Lambda** creates parameterized workflow fragments:
 
-```
+```arrow
 \name -> hello(to: name) >>> respond
 \trigger, fix -> loop(trigger >>> (pass ||| fix))
 ```
 
 **Let** names a workflow fragment for reuse:
 
-```
+```arrow
 let review = \trigger, fix ->
   loop(trigger >>> (pass ||| fix))
 in

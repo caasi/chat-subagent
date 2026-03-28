@@ -51,7 +51,7 @@ read(source: "data.csv")
   >>> 出力
 ```
 
-```
+```arrow
 let review = \trigger, fix ->
   loop(trigger >>> (pass ||| fix))
 in
