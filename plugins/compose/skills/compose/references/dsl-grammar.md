@@ -300,7 +300,7 @@ Lambda with type annotations:
   >>> parse :: HTML -> Data
 ```
 
-Lambdas must be bound via `let` and applied to be valid programs — the examples above show the syntax construct. See [Let Bindings](#let-bindings) for complete usage.
+Bare lambdas are syntactically valid statements, but in practice they are most useful when bound via `let` and applied. See [Let Bindings](#let-bindings) for complete usage.
 
 ### Let Bindings
 
