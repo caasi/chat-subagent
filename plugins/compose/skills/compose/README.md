@@ -22,6 +22,7 @@ A Claude Code skill for describing multi-step agent workflows using an Arrow-sty
 | `&&&` | Fanout — run both on same input | infixr 3 |
 | `loop()` | Feedback — repeat body iteratively | — |
 | `?` | Question — marks step as producing Either | — |
+| `(expr)` | Grouping | — |
 | `\x -> expr` | Lambda — parameterized fragment | — |
 | `let x = expr in body` | Let binding — named fragment | — |
 | `()` | Unit — no-input value | — |
