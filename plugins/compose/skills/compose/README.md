@@ -6,6 +6,7 @@ A Claude Code skill for describing multi-step agent workflows using an Arrow-sty
 
 - Teaches AI agents to plan workflows as Arrow-style pipelines before executing them
 - Validates pipeline structure with a pre-built binary checker (parse errors, unbalanced branches) and emits warnings (`?` without `|||`)
+- Lints epistemic operator conventions (`branch`/`merge` pairing, `leaf`/`check` suggestion)
 - Saves successful pipelines as `.arr` files for reuse across conversations
 - Provides common patterns: sequential, parallel, branch/fallback, and feedback loops
 - Supports abstraction with lambda (`\x -> expr`) and let bindings (`let x = expr in body`) for naming and reusing workflow fragments
@@ -27,6 +28,18 @@ A Claude Code skill for describing multi-step agent workflows using an Arrow-sty
 | `let x = expr in body` | Let binding — named fragment | — |
 | `()` | Unit — no-input value | — |
 | `;` | Statement separator | — |
+
+## Epistemic Conventions
+
+Five identifier names serve as cognitive role markers for structured reasoning workflows. The checker lints `branch` without `merge` and suggests `check` after `leaf`. See SKILL.md for full details.
+
+| Name | Intent |
+|------|--------|
+| `gather` | Collect evidence before reasoning |
+| `branch` | Explore multiple candidate paths |
+| `merge` | Converge candidates into auditable artifact |
+| `leaf` | High-cost reasoning zone — bounded sub-problem |
+| `check` | Verifiable validation step |
 
 ## Examples
 
@@ -60,7 +73,7 @@ let phase2 = build >>> review(test?, fix) in
 phase1 >>> phase2
 ```
 
-21 examples in `examples/` — including a meta-workflow that describes how this skill updates itself from the upstream repo.
+22 examples in `examples/` — including a meta-workflow that describes how this skill updates itself from the upstream repo.
 
 ## Install
 
