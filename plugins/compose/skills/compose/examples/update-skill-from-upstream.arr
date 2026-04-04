@@ -55,12 +55,12 @@ let bump_version =
   update(target: ".claude-plugin/marketplace.json", fields: [version, description])
 in
 
-let verify =
-  check_version(binary: "ocaml-compose-dsl", minimum: "0.10.0")
+let check =
+  check_version(binary: "ocaml-compose-dsl", minimum: "0.11.0")
 in
 
 -- Main pipeline
-gather >>> analyze >>> update_docs >>> update_examples >>> validate >>> bump_version >>> verify
+gather >>> analyze >>> update_docs >>> update_examples >>> validate >>> bump_version >>> check
 
 -- Separate statement: signal completion with unit trigger
 ; () >>> notify(channel: "compose-updates", status: done)
