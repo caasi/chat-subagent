@@ -18,7 +18,7 @@
     {
       "name": "compose",
       "source": "./plugins/compose",
-      "description": "Describe multi-step agent workflows using an Arrow-style DSL (>>>, ***, &&&, |||, ?, loop, \\, let...in, (), ;) and validate them structurally",
+      "description": "Describe multi-step agent workflows using an Arrow-style DSL (>>>, ***, &&&, |||, ?, loop, \\, let...in, (), ;) with epistemic operator conventions and structural validation",
       "version": "0.11.0"
     },
     {
